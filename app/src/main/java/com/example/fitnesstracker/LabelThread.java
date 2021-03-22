@@ -13,8 +13,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static java.lang.Thread.sleep;
 
 public class LabelThread implements Runnable {
-    private TextView liveRead;
-    private final AtomicBoolean running = new AtomicBoolean(false);
+    private TextView liveRead; //Textview where data is printed
+    private final AtomicBoolean running = new AtomicBoolean(false); // assists in shutting down thread
 
     public LabelThread(TextView label)
     {
@@ -42,6 +42,7 @@ public class LabelThread implements Runnable {
 
     private void ChangeLabel()
     {
+        //get latest classified label from the api in string format and show on screen
         AndroidNetworking.get("http://35.189.84.173:2333/").build().getAsString(new StringRequestListener() {
             @Override
             public void onResponse(String response) {

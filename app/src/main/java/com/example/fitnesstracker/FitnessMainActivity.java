@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 public class FitnessMainActivity extends AppCompatActivity {
-
+    //Main menu containing buttons that lead to live read activity and Statistics
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

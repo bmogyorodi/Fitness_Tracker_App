@@ -31,25 +31,29 @@ public class StatsActivity extends AppCompatActivity {
     Spinner month;
     TextView day;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //set up buttons and textviews
         setContentView(R.layout.activity_stats);
         Button test=findViewById(R.id.statTesting);
          month = (Spinner) findViewById(R.id.month_spinner);
          year=(TextView) findViewById(R.id.enter_year);
          day=(TextView) findViewById(R.id.enter_day);
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.months, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         month.setAdapter(adapter);
         month.getSelectedItemPosition();
-        SetQueryToday();
+        //month is in a spinner, where the user can select the month in dropdown view,
+        // the list is made so every month is aligned with their number in date format (0 is all, for yearly stats)
+        SetQueryToday(); //Default setting of query is set for today
         test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GetStats();
+                GetStats(); //Get statistics data based on query parameters entered
             }
         });
     }
@@ -57,6 +61,7 @@ public class StatsActivity extends AppCompatActivity {
 
 
     private void SetQueryToday() {
+        //Sets up textviews and spinner to match data for fetching todays movement data
         Date today = new Date();
         SimpleDateFormat dft=new SimpleDateFormat("yyyy/MM/dd");
         Log.i(TAG,dft.format(today));
@@ -66,13 +71,13 @@ public class StatsActivity extends AppCompatActivity {
         day.setText(date[2]);
     }
 
-    private void Test(Spinner spinner) {
-        Log.i(TAG, String.valueOf(spinner.getSelectedItemPosition()));
-    }
+
     private void GetStats()
     {
+        //Start the showstats activity, passing the query parameters with the intent
         if(year.getText().toString().equals(""))
         {
+            //year must be selected regardless of query type
             Toast.makeText(this,"You must select a year!",Toast.LENGTH_SHORT).show();
             return;
         }

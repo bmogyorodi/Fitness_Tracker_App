@@ -21,7 +21,7 @@ import org.json.JSONException;
 import java.util.Objects;
 
 public class ShowStatsActivity extends AppCompatActivity {
-
+//activity to show statistics which were queried by front activity StatsActivity
     PieChart pieChart;
     TextView tvWalk,tvJog,tvRun,tvCycle;
     TextView queryTitle;
@@ -42,29 +42,31 @@ public class ShowStatsActivity extends AppCompatActivity {
         queryTitle=findViewById(R.id.query_title_text);
         pieChart = findViewById(R.id.piechart);
         //setPieData();
-        AndroidNetworking.initialize(getApplicationContext());
-        int year=getIntent().getIntExtra("year",2021);
+        AndroidNetworking.initialize(getApplicationContext()); //initialize to fetch data from api later
+        int year=getIntent().getIntExtra("year",2021); //fetching year, month and day from intent based on which query is made
         int month=getIntent().getIntExtra("month",3);
         int day=getIntent().getIntExtra("day",0);
-        SelectQuery(year,month,day);
+        SelectQuery(year,month,day); //Carries out query and prints data on piechart and other cardview
     }
 
     private void SelectQuery(int year, int month, int day) {
-        CreateQueryTitle(year,month,day);
-        if(month==0)
+        CreateQueryTitle(year,month,day); //Create query title to show what the data is for
+        //select query type based on input parameters
+        if(month==0) //means all was selected so year query is selected (sum of all month)
         {
             YearQuery(year);
             return;
         }
-        if(day==0)
+        if(day==0) // if day was not selected it is interpreted as a month query
         {
             MonthQuery(year,month);
             return;
         }
-        DayQuery(year,month,day);
+        DayQuery(year,month,day); //otherwise query a specific day
     }
 
     private void CreateQueryTitle(int year, int month, int day) {
+        //Choose query type and create string of format Query type: yyyy/mm/dd, cut shorter if necessary
         String queryType="Day Record";
         if(day==0)
         {
@@ -83,7 +85,7 @@ public class ShowStatsActivity extends AppCompatActivity {
 
     private void DayQuery(int year, int month, int day) {
 
-
+        //sends get request to api with sent in parameters
         AndroidNetworking.get("http://35.189.84.173:2333/day")
                 .addQueryParameter("year",String.valueOf(year))
                 .addQueryParameter("month",String.valueOf(month))
@@ -98,14 +100,13 @@ public class ShowStatsActivity extends AppCompatActivity {
                         running=response.getInt(0);
                         walking=response.getInt(1);
                         jogging=response.getInt(2);
-                        cycling=response.getInt(3);
+                        cycling=response.getInt(3); //sending data to activity variables
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
                 }
-                else{}
-                setPieData();
+                setPieData(); //displaying data
 
             }
 
@@ -117,6 +118,7 @@ public class ShowStatsActivity extends AppCompatActivity {
     }
 
     private void MonthQuery(int year, int month) {
+        //same as above but with month, different path and parameters
         AndroidNetworking.get("http://35.189.84.173:2333/month")
                 .addQueryParameter("year",String.valueOf(year))
                 .addQueryParameter("month",String.valueOf(month))
@@ -135,7 +137,6 @@ public class ShowStatsActivity extends AppCompatActivity {
                     }
 
                 }
-                else{}
                 setPieData();
 
             }
@@ -149,6 +150,7 @@ public class ShowStatsActivity extends AppCompatActivity {
     }
 
     private void YearQuery(int year) {
+        //same as above but with year, different path and parameters
         AndroidNetworking.get("http://35.189.84.173:2333/year")
                 .addQueryParameter("year",String.valueOf(year))
                 .build().getAsJSONArray(new JSONArrayRequestListener() {
@@ -183,7 +185,7 @@ public class ShowStatsActivity extends AppCompatActivity {
         tvWalk.setText(String.valueOf(walking)+" m");
         tvRun.setText(String.valueOf(running)+" m");
         tvCycle.setText(String.valueOf(cycling)+" m");
-        pieChart.clearChart();// clear it in case it was drawn before
+        pieChart.clearChart();// clear it in case it was drawn before, just to avoid error, (not possible)
         pieChart.addPieSlice( new PieModel("Jogging",jogging, Color.parseColor("#66BB6A")));
         pieChart.addPieSlice( new PieModel("Cycling",cycling,Color.parseColor("#29B6F6")));
         pieChart.addPieSlice( new PieModel("Walking",walking,Color.parseColor("#FFA726")));
@@ -192,7 +194,7 @@ public class ShowStatsActivity extends AppCompatActivity {
 
         pieChart.startAnimation();
     }
-    private void APIUnavailableMessage()
+    private void APIUnavailableMessage() //Send toast message if API is not connected
     {
         Toast.makeText(this,"API is not available! Check connection!",Toast.LENGTH_SHORT).show();
 

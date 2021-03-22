@@ -59,19 +59,26 @@ public class LiveReadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live_read);
 
+        //Setting up textview
+
         liveRead=findViewById(R.id.live_predictionText);
         status=findViewById(R.id.status_text);
         tdCycle=findViewById(R.id.todayCycle);
         tdJog=findViewById(R.id.todayJog);
         tdRun=findViewById(R.id.todayRun);
         tdWalk=findViewById(R.id.todayWalk);
+
+        //Setting up different threads
+        // Timer t: Fetches Todays data from database every 30 second
+        // label t : Fetches latest classfied label from api
+        // status t: Checks whether board is connected
         t = new Timer();
         t.schedule(new TimerTask() {
             @Override
             public void run() {
                 FetchToday();
             }
-        }, 0, 15000);
+        }, 0, 30000);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         AndroidNetworking.initialize(getApplicationContext());
@@ -90,6 +97,7 @@ public class LiveReadActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        //shut down threads on stopping activity so no unnecesarily calls are made to api
         t.cancel();
         labelReader.stop();
         statusReader.stop();
@@ -107,7 +115,7 @@ public class LiveReadActivity extends AppCompatActivity {
 
     }
     private void FetchToday()
-    {
+    {   //Fetch date and query days data
         Date today = new Date();
         SimpleDateFormat dft=new SimpleDateFormat("yyyy/MM/dd");
         Log.i(TAG,dft.format(today));
@@ -121,7 +129,7 @@ public class LiveReadActivity extends AppCompatActivity {
     }
     private void DayQuery(int year, int month, int day) {
 
-
+        //Fetching todays motion data from API
         AndroidNetworking.get("http://35.189.84.173:2333/day")
                 .addQueryParameter("year",String.valueOf(year))
                 .addQueryParameter("month",String.valueOf(month))
@@ -143,20 +151,16 @@ public class LiveReadActivity extends AppCompatActivity {
 
                 }
                 else{}
-                setTodayData();
+                setTodayData(); //show data in table
 
             }
 
             @Override
             public void onError(ANError anError) {
-                //APIUnavailableMessage();
+
 
             }
         });
     }
-    private void APIUnavailableMessage()
-    {
-        Toast.makeText(this,"API is not available! Check connection!",Toast.LENGTH_SHORT).show();
 
-    }
 }
