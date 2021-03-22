@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Fitness Tracker</string>
+    <string name="connect">Connected</string>
+    <string name="connecting">Connecting</string>
+    <string name="disconnect">Disconnected</string>
+    <string name="unknown_heart_rate">Heartrate is unknown</string>
+    <string-array name="months">
+        <item>All</item>
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
+
+</resources>
