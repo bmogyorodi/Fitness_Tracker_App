@@ -12,12 +12,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static java.lang.Thread.sleep;
 
 public class ConnectionCheckThread implements Runnable{
+    private LiveReadActivity context;
     private TextView status; //text to show status, which changes based on api response
     private final AtomicBoolean running = new AtomicBoolean(false); //boolean to stop running thread
 
-    public ConnectionCheckThread(TextView statusText)
+    public ConnectionCheckThread(LiveReadActivity context)
     {
-        status=statusText;
+        this.context=context;
+        status=context.status;
 
     }
 
@@ -44,7 +46,8 @@ public class ConnectionCheckThread implements Runnable{
 
     private void CheckConnection() {
         //Fetch whether board is connected properly
-        AndroidNetworking.get("http://35.189.84.173:2333/connect").build().getAsString(new StringRequestListener() {
+
+        AndroidNetworking.get(context.getString(R.string.api_ip)+"/connect").build().getAsString(new StringRequestListener() {
             @Override
             public void onResponse(String response) {
                 status.setText(response);

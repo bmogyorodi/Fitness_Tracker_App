@@ -82,10 +82,10 @@ public class LiveReadActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         AndroidNetworking.initialize(getApplicationContext());
-        statusReader=new ConnectionCheckThread(status);
+        statusReader=new ConnectionCheckThread(this);
         Thread statusT=new Thread(statusReader);
         statusT.start();
-        labelReader=new LabelThread(liveRead);
+        labelReader=new LabelThread(this);
         Thread labelT=new Thread(labelReader);
         labelT.start();
 
@@ -105,7 +105,22 @@ public class LiveReadActivity extends AppCompatActivity {
 
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                FetchToday();
+            }
+        }, 0, 30000);
+        statusReader=new ConnectionCheckThread(this);
+        Thread statusT=new Thread(statusReader);
+        statusT.start();
+        labelReader=new LabelThread(this);
+        Thread labelT=new Thread(labelReader);
+        labelT.start();
+    }
 
     public void setTodayData() { // create chart based on Movement data
         tdJog.setText(String.valueOf(jogging)+" m");
@@ -130,7 +145,7 @@ public class LiveReadActivity extends AppCompatActivity {
     private void DayQuery(int year, int month, int day) {
 
         //Fetching todays motion data from API
-        AndroidNetworking.get("http://35.189.84.173:2333/day")
+        AndroidNetworking.get(getString(R.string.api_ip)+"/day")
                 .addQueryParameter("year",String.valueOf(year))
                 .addQueryParameter("month",String.valueOf(month))
                 .addQueryParameter("day",String.valueOf(day))

@@ -4,6 +4,7 @@
     <string name="connecting">Connecting</string>
     <string name="disconnect">Disconnected</string>
     <string name="unknown_heart_rate">Heartrate is unknown</string>
+    <string name="api_ip">http://35.189.84.173:2333</string>
     <string-array name="months">
         <item>All</item>
         <item>January</item>

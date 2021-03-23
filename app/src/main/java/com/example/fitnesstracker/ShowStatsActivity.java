@@ -86,7 +86,7 @@ public class ShowStatsActivity extends AppCompatActivity {
     private void DayQuery(int year, int month, int day) {
 
         //sends get request to api with sent in parameters
-        AndroidNetworking.get("http://35.189.84.173:2333/day")
+        AndroidNetworking.get(getString(R.string.api_ip)+"/day")
                 .addQueryParameter("year",String.valueOf(year))
                 .addQueryParameter("month",String.valueOf(month))
                 .addQueryParameter("day",String.valueOf(day))
@@ -119,7 +119,7 @@ public class ShowStatsActivity extends AppCompatActivity {
 
     private void MonthQuery(int year, int month) {
         //same as above but with month, different path and parameters
-        AndroidNetworking.get("http://35.189.84.173:2333/month")
+        AndroidNetworking.get(getString(R.string.api_ip)+"/month")
                 .addQueryParameter("year",String.valueOf(year))
                 .addQueryParameter("month",String.valueOf(month))
                 .build().getAsJSONArray(new JSONArrayRequestListener() {
@@ -151,7 +151,7 @@ public class ShowStatsActivity extends AppCompatActivity {
 
     private void YearQuery(int year) {
         //same as above but with year, different path and parameters
-        AndroidNetworking.get("http://35.189.84.173:2333/year")
+        AndroidNetworking.get(getString(R.string.api_ip)+"/year")
                 .addQueryParameter("year",String.valueOf(year))
                 .build().getAsJSONArray(new JSONArrayRequestListener() {
             @Override
